@@ -45,7 +45,7 @@ function App() {
       <Router>
         <Routes>
           {/* Customer Routes */}
-          <Route path="/" element={<><Header /><HomePage /></>} />
+          <Route path="/" element={<><Header /><HomePage /><Footer /></>} />
           <Route path="/customer-homepage" element={<><Header /><Home /></>} /> 
           <Route path="/customer-login" element={<><Header /><CustomerLoginPage /></>} />
           <Route path="/customer-register" element={<><Header /><CustomerRegisterPage /></>} />

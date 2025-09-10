@@ -2,30 +2,42 @@
 import React, { useState } from "react";
 import { Box, Typography, TextField, Button, Paper, Alert } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../auth/useAuth";
+import { registerCustomer } from "../../api/authApi";  // API call
 
 export default function CustomerRegisterPage() {
     const navigate = useNavigate();
-    const { login } = useAuth();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setSuccess("");
 
         if (password !== confirmPassword) {
             setError("Passwords do not match");
             return;
         }
 
-        // Simulated registration (replace with backend API)
-        login({ name, email });
-        navigate("/"); // redirect home
+        try {
+            // ✅ Call backend API
+            await registerCustomer({ name, email, password });
+
+            // ✅ Show success message
+            setSuccess("Registration successful! Redirecting to login...");
+
+            // ✅ Redirect to login page after 2 seconds
+            setTimeout(() => {
+                navigate("/customer-login");
+            }, 2000);
+        } catch (err) {
+            setError(err.response?.data?.message || "Registration failed");
+        }
     };
 
     return (
@@ -36,6 +48,7 @@ export default function CustomerRegisterPage() {
                 </Typography>
 
                 {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+                {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
                 <form onSubmit={handleSubmit}>
                     <TextField
